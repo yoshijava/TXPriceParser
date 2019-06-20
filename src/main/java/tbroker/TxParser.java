@@ -2,10 +2,10 @@ package tbroker;
 
 import java.util.*;
 import java.text.*;
+import org.json.*;
 
 public class TxParser {
-    public static void main(String[] args) throws Exception {
-        String sym = "TX07";
+    public JSONObject getTxPrice(String sym) {
         Record r = new Record();
         Poll poll = new Poll();
         String type = sym.substring(0, 2).toLowerCase();
@@ -31,8 +31,21 @@ public class TxParser {
         if (now.getHours() == 0 && hh == 23) {
             d = Util.addDay(d, -1);
         }
-        // Tick t = new Tick(d, 0, r.dp);
-        // return t;
-        System.out.println(d + ", " + r.dp);
+        /*
+            {"ret":"OK","a":"-1","b":"-1","v":"10668.00","ts":"1561039297","o":"10602.00"}
+        */
+        JSONObject jObj = new JSONObject();
+        jObj.put("ret", "OK");
+        jObj.put("a", "-1");
+        jObj.put("b", "-1");
+        jObj.put("v", String.valueOf(r.dp));
+        jObj.put("ts", String.valueOf(d.getTime()/1000)); // seconds from 1970
+        jObj.put("o", String.valueOf(r.op));
+        return jObj;
+    }
+
+    public static void main(String[] args) throws Exception {
+        JSONObject obj = new TxParser().getTxPrice("TX07");
+        System.out.println(obj);
     }
 }

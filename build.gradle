@@ -23,6 +23,9 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     mavenCentral()
+    flatDir {
+       dirs './libs'
+   }
 }
 
 dependencies {
