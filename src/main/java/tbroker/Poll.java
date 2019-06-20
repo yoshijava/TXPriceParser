@@ -30,11 +30,13 @@ class Poll {
                 Element table = null;
                 Elements rows = null;
                 int tableIdx = 0;
+                String title = "";
                 do {
                     table = doc.select("table").get(tableIdx++); // select the first table.
                     rows = table.select("tr");
-                } while(rows.get(0).text().trim().startsWith("商品") == false);
-                String[] headline = rows.get(0).text().trim().split("\\s");
+                    title = rows.get(0).text().trim();
+                } while( title.startsWith("商品") == false);
+                String[] headline = title.trim().split("\\s");
                 int dealPriIdx = -1;
                 int openPriIdx = -1;
                 int timeIdx = -1;
