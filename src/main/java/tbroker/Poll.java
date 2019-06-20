@@ -34,7 +34,22 @@ class Poll {
                     table = doc.select("table").get(tableIdx++); // select the first table.
                     rows = table.select("tr");
                 } while(rows.get(0).text().trim().startsWith("商品") == false);
-                    
+                String[] headline = rows.get(0).text().trim().split("\\s");
+                int dealPriIdx = -1;
+                int openPriIdx = -1;
+                int timeIdx = -1;
+                for(int i=0; i<headline.length; i++) {
+                    String s = headline[i];
+                    if(s.equals("成交價")) {
+                        dealPriIdx = i;
+                    }
+                    else if(s.equals("開盤")) {
+                        openPriIdx = i;
+                    }
+                    else if(s.equals("時間")) {
+                        timeIdx = i;
+                    }
+                }
                 for (int i = 0; i < rows.size(); i++) {
                     List<Element> tds = (List<Element>) rows.get(i).select("td");
                     Element e = tds.get(0);
@@ -47,11 +62,11 @@ class Poll {
                     r.target = "tx" + target;
                     r.dp =
                             Double.parseDouble(
-                                    tds.get(6).text().replaceAll(",", ""));
+                                    tds.get(dealPriIdx).text().replaceAll(",", ""));
                     r.op =
                             Double.parseDouble(
-                                    tds.get(10).text().replaceAll(",", ""));
-                    r.tss = tds.get(14).text();
+                                    tds.get(openPriIdx).text().replaceAll(",", ""));
+                    r.tss = tds.get(timeIdx).text();
                     System.out.println(r);
                     return r;
                 }
