@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 group = 'iitrader'
 
-mainClassName = 'tbroker.CapitalParser'
+mainClassName = 'tbroker.TxParser'
 sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 version = '1.0'
@@ -23,17 +23,22 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
     mavenCentral()
+    flatDir {
+       dirs 'libs/', '../tbroker/build/libs/'
+    }
 }
 
 dependencies {
-    compile 'org.jsoup:jsoup:1.12.1'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+    compile files('../tbroker/build/libs/tbroker-1.0-all.jar')
+
 }
 
 jar {
   manifest {
     attributes(
       'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-      'Main-Class': 'tbroker.CapitalParser'
+      'Main-Class': 'tbroker.TxParser'
     )
   }
 }
