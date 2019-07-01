@@ -1,6 +1,14 @@
 package tbroker;
 
+import java.security.cert.X509Certificate;
 import java.util.*;
+
+import javax.crypto.NoSuchPaddingException;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
@@ -15,6 +23,29 @@ class Poll {
         return poll(r, target, "臺指期");
     }
 
+    private SSLSocketFactory socketFactory() {
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        } };
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sslContext.getSocketFactory();
+        } catch (Throwable e) {
+            String message = "Failed to create a SSL socket factory";
+            throw new RuntimeException(message, e);
+        }
+    }
+
     Record poll(Record r, String target, String key) {
         r.target = target;
         target = target.substring(2);
@@ -26,7 +57,7 @@ class Poll {
         }
         while (true) {
             try {
-                Document doc = Jsoup.connect(url).get();
+                Document doc = Jsoup.connect(url).sslSocketFactory(socketFactory()).get();
                 Element table = null;
                 Elements rows = null;
                 int tableIdx = 0;
