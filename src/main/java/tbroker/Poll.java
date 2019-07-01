@@ -3,7 +3,6 @@ package tbroker;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
-import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -24,17 +23,19 @@ class Poll {
     }
 
     private SSLSocketFactory socketFactory() {
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
+        TrustManager[] trustAllCerts = new TrustManager[] { 
+            new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
 
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
 
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        } };
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            } 
+        };
 
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
