@@ -58,7 +58,10 @@ class Poll {
         }
         while (true) {
             try {
-                Document doc = Jsoup.connect(url).sslSocketFactory(socketFactory()).get();
+                Document doc = Jsoup.connect(url).sslSocketFactory(socketFactory())
+			.userAgent("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36")
+      			.referrer("http://www.google.com")
+			.get();
                 Element table = null;
                 Elements rows = null;
                 int tableIdx = 0;
