@@ -45,7 +45,7 @@ public class TxParser {
     }
 
     public static void main(String[] args) throws Exception {
-        JSONObject obj = new TxParser().getTxPrice("TX07.TW");
+        JSONObject obj = new TxParser().getTxPrice(args[0]);
         System.out.println(obj);
     }
 }
