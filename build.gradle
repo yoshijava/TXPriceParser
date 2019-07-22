@@ -29,6 +29,7 @@ repositories {
 }
 
 dependencies {
+    compile 'org.json:json:20171018'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
     compile files('../tbroker/build/libs/tbroker-1.0-all.jar')
 
