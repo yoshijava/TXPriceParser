@@ -104,7 +104,7 @@ class Poll {
                             Double.parseDouble(
                                     tds.get(openPriIdx).text().replaceAll(",", ""));
                     r.tss = tds.get(timeIdx).text();
-                    System.out.println(r);
+                    // System.out.println(r);
                     return r;
                 }
                 return null;
