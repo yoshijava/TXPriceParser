@@ -19,29 +19,36 @@ public class TxParser {
         } else {
             poll.pollTe(r, tar);
         }
-        long ts = r.getTS();
-        int hh = (int) ((ts >> 24) & 0xff);
-        int mm = (int) ((ts >> 16) & 0xff);
-        int ss = (int) ((ts >> 8) & 0xff);
-        now = new Date();
-        String hhmmss = String.format("%2d:%2d:%2d", hh, mm, ss);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String yyyyMMdd = sdf.format(now);
-        Date d = Util.parseL(yyyyMMdd + " " + hhmmss);
-        if (now.getHours() == 0 && hh == 23) {
-            d = Util.addDay(d, -1);
+        if(r.isValid()) {
+            long ts = r.getTS();
+            int hh = (int) ((ts >> 24) & 0xff);
+            int mm = (int) ((ts >> 16) & 0xff);
+            int ss = (int) ((ts >> 8) & 0xff);
+            now = new Date();
+            String hhmmss = String.format("%2d:%2d:%2d", hh, mm, ss);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String yyyyMMdd = sdf.format(now);
+            Date d = Util.parseL(yyyyMMdd + " " + hhmmss);
+            if (now.getHours() == 0 && hh == 23) {
+                d = Util.addDay(d, -1);
+            }
+            /*
+                {"ret":"OK","a":"-1","b":"-1","v":"10668.00","ts":"1561039297","o":"10602.00"}
+            */
+            JSONObject jObj = new JSONObject();
+            jObj.put("ret", "OK");
+            jObj.put("a", "-1");
+            jObj.put("b", "-1");
+            jObj.put("v", String.valueOf(r.dp));
+            jObj.put("ts", String.valueOf(d.getTime()/1000)); // seconds from 1970
+            jObj.put("o", String.valueOf(r.op));
+            return jObj;
         }
-        /*
-            {"ret":"OK","a":"-1","b":"-1","v":"10668.00","ts":"1561039297","o":"10602.00"}
-        */
-        JSONObject jObj = new JSONObject();
-        jObj.put("ret", "OK");
-        jObj.put("a", "-1");
-        jObj.put("b", "-1");
-        jObj.put("v", String.valueOf(r.dp));
-        jObj.put("ts", String.valueOf(d.getTime()/1000)); // seconds from 1970
-        jObj.put("o", String.valueOf(r.op));
-        return jObj;
+        else {
+            JSONObject jObj = new JSONObject();
+            jObj.put("ret", "no such pri");
+            return jObj;
+        }
     }
 
     public static void main(String[] args) throws Exception {
