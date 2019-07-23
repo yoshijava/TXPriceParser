@@ -13,7 +13,7 @@ public class TxParser {
         if (Util.format(now, "MM").equals("12"))
             now = Util.addYear(now, 1);
         String tar = type + Util.format(now, "yyyy") + sym.substring(2, 4);
-        System.out.println("tar = " + tar);
+        // System.out.println("tar = " + tar);
         if (type.equals("tx")) {
             poll.pollTx(r, tar);
         } else {
